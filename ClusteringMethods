@@ -20,7 +20,7 @@ seeds_combined = cbind(seeds_dataset, seeds_real)
 seeds_combined = na.omit(seeds_combined) # deletion of missing data
 seeds_combined = scale(seeds_combined) # standardize variables 
 
-#i = 3
+i = 3
 #initialize the variable in order to store wk values for the for loop 
 wkValues = c(0)
  
