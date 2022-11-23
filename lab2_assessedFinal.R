@@ -1,0 +1,64 @@
+setwd( "C:/Users/livio/OneDrive/Documents/Lab 1 Artificial intelligence/Artifical intelligence Labs")
+seeds_dataset = read.csv('seeds_dataset.csv', sep = ",")
+seeds_real = read.csv('seeds_real.csv', sep = ",")
+
+
+plot(seeds_dataset)
+plot(seeds_real)
+
+
+x1 = seeds_dataset$Area # x-axis
+y1 = seeds_dataset$Perimeter # y-axis
+
+plot(x1, y1, main = "Area against Perimeter",
+     xlab = "Area", ylab = "Perimeter")
+
+
+seeds_combined = cbind(seeds_dataset, seeds_real)
+
+
+seeds_combined = na.omit(seeds_combined) # deletion of missing data
+seeds_combined = scale(seeds_combined) # standardize variables 
+
+#i = 3
+#initialize the variable in order to store wk values for the for loop 
+wkValues = c(0)
+ 
+  for (i in c(2:10))
+ {
+  # formation of the euclidean matrix, by calculating the different
+  # distances from a fixed point to obtain clusters
+  d = dist(seeds_combined, method = "euclidean") # distance matrix
+  
+  fit = hclust(d, method="average")
+  # fit = hclust(d, method="single") #shortest distance between 2 points
+  # fit = hclust(d, method="complete")#largest distance between two points 
+  
+  plot(fit)
+  
+  Hgroups = cutree(fit, k=i) # cut tree into k clusters
+  
+  # representing the different clusters on the dendogram
+  rect.hclust(fit, k=i, border="red")
+  
+  # plotting the data as clusters on a scatter plot
+  plot(seeds_combined, col=Hgroups)
+  
+  fit = kmeans(seeds_combined, i) # k cluster solution
+  
+  aggregate(seeds_combined,by=list(fit$cluster),FUN=mean)
+  
+  Kgroups = fit$cluster
+  
+  plot(seeds_combined,col=Kgroups)
+  
+  source("C:/Users/livio/OneDrive/Documents/Lab 1 Artificial intelligence/Artifical intelligence Labs/WK_R.r")
+  
+  wk = WK_R(Kgroups, Hgroups)
+  wkValues = append(wkValues,wk)
+  
+ }
+
+kValues = c(0, 2:10)
+plot(kValues, wkValues)
+
